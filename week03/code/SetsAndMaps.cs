@@ -22,6 +22,12 @@ public static class SetsAndMaps
     public static string[] FindPairs(string[] words)
     {
         // TODO Problem 1 - ADD YOUR CODE HERE
+        var set1 = new HashSet<string> { };
+        
+        foreach(var letter in words)
+        {
+            
+        }
         return [];
     }
 
