@@ -22,15 +22,28 @@ public static class SetsAndMaps
     public static string[] FindPairs(string[] words)
     {
         // TODO Problem 1 - ADD YOUR CODE HERE
-        var set1 = new HashSet<string> { };
-        
-        foreach(var letter in words)
+        var word = new HashSet<string>();
+        var result = new List<string>();
+        foreach (var x in words)
         {
-            
-        }
-        return [];
-    }
+            if (x[0] == x[1])
+                continue;
 
+            string reversed = $"{x[1]}{x[0]}";
+
+            if (word.Contains(reversed))
+            {
+                result.Add($"{reversed} & {x}");
+            }
+            else
+            {
+                word.Add(x);
+            }
+
+        }
+
+        return result.ToArray();
+    }
     /// <summary>
     /// Read a census file and summarize the degrees (education)
     /// earned by those contained in the file.  The summary
@@ -49,6 +62,16 @@ public static class SetsAndMaps
         {
             var fields = line.Split(",");
             // TODO Problem 2 - ADD YOUR CODE HERE
+            var degree = fields[3];
+            if (degrees.ContainsKey(degree))
+            {
+                degrees[degree]++;
+            }
+            else
+            {
+                degrees[degree] = 1;
+            }
+
         }
 
         return degrees;
@@ -73,23 +96,65 @@ public static class SetsAndMaps
     public static bool IsAnagram(string word1, string word2)
     {
         // TODO Problem 3 - ADD YOUR CODE HERE
-        return false;
+        {
+            var count = new Dictionary<char, int>();
+            int letters1 = 0;
+            int letters2 = 0;
+
+            foreach (char x in word1.ToLower())
+            {
+                if (char.IsWhiteSpace(x))
+                    continue;
+
+                letters1++;
+
+                if (count.ContainsKey(x))
+                    count[x]++;
+                else
+                    count[x] = 1;
+            }
+
+            foreach (char x in word2.ToLower())
+            {
+                if (char.IsWhiteSpace(x))
+                    continue;
+
+                letters2++;
+
+                if (!count.ContainsKey(x))
+                    return false;
+
+                count[x]--;
+
+                if (count[x] < 0)
+                    return false;
+            }
+            if (letters1 != letters2)
+                return false;
+            foreach (var pair in count)
+            {
+                Console.WriteLine($"'{pair.Key}' : {pair.Value}");
+            }
+            return true;
+        }
+
+
     }
 
-    /// <summary>
-    /// This function will read JSON (Javascript Object Notation) data from the 
-    /// United States Geological Service (USGS) consisting of earthquake data.
-    /// The data will include all earthquakes in the current day.
-    /// 
-    /// JSON data is organized into a dictionary. After reading the data using
-    /// the built-in HTTP client library, this function will return a list of all
-    /// earthquake locations ('place' attribute) and magnitudes ('mag' attribute).
-    /// Additional information about the format of the JSON data can be found 
-    /// at this website:  
-    /// 
-    /// https://earthquake.usgs.gov/earthquakes/feed/v1.0/geojson.php
-    /// 
-    /// </summary>
+/// <summary>
+/// This function will read JSON (Javascript Object Notation) data from the 
+/// United States Geological Service (USGS) consisting of earthquake data.
+/// The data will include all earthquakes in the current day.
+/// 
+/// JSON data is organized into a dictionary. After reading the data using
+/// the built-in HTTP client library, this function will return a list of all
+/// earthquake locations ('place' attribute) and magnitudes ('mag' attribute).
+/// Additional information about the format of the JSON data can be found 
+/// at this website:  
+/// 
+/// https://earthquake.usgs.gov/earthquakes/feed/v1.0/geojson.php
+/// 
+/// </summary>
     public static string[] EarthquakeDailySummary()
     {
         const string uri = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_day.geojson";
@@ -107,6 +172,15 @@ public static class SetsAndMaps
         // on those classes so that the call to Deserialize above works properly.
         // 2. Add code below to create a string out each place a earthquake has happened today and its magitude.
         // 3. Return an array of these string descriptions.
-        return [];
+        var result = new List<string>();
+        foreach (var features in featureCollection.features)
+        {
+            string place = features.properties.place;
+            double mag = features.properties.mag;
+            result.Add($"{place} - Mag {mag}");
+        }
+
+
+        return result.ToArray();
     }
 }
