@@ -56,6 +56,21 @@ public class PriorityQueueTests
 
         Assert.AreEqual("Jhon", item);
     }
+    [TestMethod]
+    // Scenario: If the queue is empty the function need to fail
+    // Expected Result: Throws an InvalidOperationException
+    // Defect(s) Found: 
+    public void TestPriorityQueue_3()
+    {
+        var priorityQueue = new PriorityQueue();
 
+
+        var exception = Assert.ThrowsException<InvalidOperationException>(() =>
+        {
+            priorityQueue.Dequeue();
+        });
+        Assert.AreEqual("The queue is empty.", exception.Message);
+
+    }
     // Add more test cases as needed below.
 }
